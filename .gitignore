@@ -1,3 +1,5 @@
 models/yolo5_last.pt
 models/best.pt
 models/keypoints_model.pth
+
+yolov8x.pt
