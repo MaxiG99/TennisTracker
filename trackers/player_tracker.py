@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 import cv2
-
+import pickle 
 class PlayerTracker:
     def __init__(self,model_path):
         self.model = YOLO(model_path)
@@ -12,9 +12,8 @@ class PlayerTracker:
             player_detections.append(player_dict)
         
         return player_detections
-
-
-    def detect_frame(self, frame):
+   
+    def detect_frame(self, frame, read_from_stub = False,stub_path= None):
         results = self.model.track(frame, persist=True)[0]
         id_name_dict = results.names
 
@@ -29,14 +28,15 @@ class PlayerTracker:
         
         return player_dict
 
+    
     def draw_bboxes(self,video_frames, player_detections):
         output_video_frames = []
         for frame, player_dict in zip(video_frames, player_detections):
             # Draw Bounding Boxes
             for track_id, bbox in player_dict.items():
                 x1, y1, x2, y2 = bbox
-                cv2.putText(frame, f"Player ID: {track_id}",(int(bbox[0]),int(bbox[1]-10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,0,255),2)
-                frame = cv2.rectangle(frame, (int(x1),int(y1),int(x2),int(y2)),(0,0,225),2)
+                cv2.putText(frame, f"Player ID: {track_id}",(int(bbox[0]),int(bbox[1] -10 )),cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
             output_video_frames.append(frame)
         
         return output_video_frames
