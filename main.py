@@ -2,6 +2,7 @@ from utils import (read_video,
                    save_video)
 from trackers import PlayerTracker, BallTracker
 from court_line_detector import CourtLineDetector
+from mini_court import MiniCourt
 import cv2
 
 def main():
@@ -28,6 +29,9 @@ def main():
 
     # choose players
     player_detections = player_tracker.choose_and_filter_players(court_keypoints, player_detections)
+    
+    # Mini Court
+    mini_court = MiniCourt(video_frames[0])
 
     # Draw Output
 
@@ -41,6 +45,9 @@ def main():
     ## Draw frame number on top left corner
     for i, frame in enumerate(output_video_frames):
         cv2.putText(frame, f"frame:{i}",(10, 30) ,cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+
+    ## Draw Mini Court
+    output_video_frames = mini_court.draw_mini_court(output_video_frames)
 
     save_video(output_video_frames, "output_videos/output_video.avi")
 
